@@ -7,6 +7,7 @@ const AppRoutes =  () => {
     return(
         <Routes>
             <Route path={"/"} element={<Index/>}/>
+            <Route path={"/test"} element={<Prueba/>}/>
         </Routes>
     )
 }

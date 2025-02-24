@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Layout, Typography, Menu } from "antd";
 import Plans from "../components/Plans";
 import laptopImg from "../assets/img/laptop-realista-telefono-inteligente.png";
+import AppFooter from "../components/AppFooter";
+import SplitSection from "../components/SplitSection";
 
 const { Header, Content } = Layout;
 const { Title, Paragraph } = Typography;
@@ -63,7 +65,9 @@ const Index = () => {
         START WITH THE NEW ERA OF FACIAL TECHNOLOGY
         </Paragraph>
       </Content>
+
       <Plans/>
+      <AppFooter/>
     </Layout>
   );
 };
