@@ -17,9 +17,9 @@ const RegistroDomo = () => {
   const [selectedDevices, setSelectedDevices] = useState([]);
   const [deviceSettings, setDeviceSettings] = useState({});
 
+  console.log(images)
 
   useEffect(() => {
-
     axios.get("http://localhost:5000/devices")
       .then(response => {
         setDevices(response.data);
@@ -70,6 +70,7 @@ const RegistroDomo = () => {
     try {
       const username = form.getFieldValue("usuario");
   
+      // Construimos un solo objeto con todas las imágenes
       const payload = {
         username,
         images: capturedImages.map((image, index) => ({
