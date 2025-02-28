@@ -91,6 +91,8 @@ const startAutoCapture = () => {
   }, 3000);
 };
 
+const username = "mserna"
+
 const handleUpload = async () => {
   if (!personName || capturedImages.length < 300) {
     message.error('Por favor, completa todas las capturas antes de registrar.');
@@ -102,7 +104,7 @@ const handleUpload = async () => {
   capturedImages.forEach(file => formData.append('files', file));
 
   try {
-    const response = await axios.post('http://localhost:8000/register-face', formData, {
+    const response = await axios.post(`http://localhost:8000/register-face`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
     
