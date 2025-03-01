@@ -17,34 +17,77 @@ const RegistroDomo = () => {
   const [selectedDevices, setSelectedDevices] = useState([]);
   const [deviceSettings, setDeviceSettings] = useState({});
 
-  console.log(images)
 
   useEffect(() => {
-    axios.get("http://localhost:5000/devices")
+    axios.get("http://localhost:8000/api/devices/get_catalogue/devices")
       .then(response => {
-        setDevices(response.data);
+        setDevices(response.data.devices);  // Guardamos los dispositivos en el estado
       })
       .catch(error => {
         console.error("Error fetching devices:", error);
       });
   }, []);
 
+  const trainModel = async() =>{
+    try{
+      const response = await axios.get("http://localhost:8000/api/faces/entrenar");
+
+      console.log(response)
+    }catch(e){
+      console.error(e)
+    }
+  }
+
   const handleDeviceChange = (selected) => {
     setSelectedDevices(selected);
     const newSettings = {};
     selected.forEach(deviceId => {
-      newSettings[deviceId] = 50;
+      const device = devices.find(d => d.device_id === deviceId);
+      newSettings[deviceId] = device.default_preferences;  // Inicializamos con las preferencias por defecto
     });
     setDeviceSettings(newSettings);
   };
 
-  const handleSettingChange = (deviceId, value) => {
-    setDeviceSettings(prev => ({ ...prev, [deviceId]: value }));
+  const handleSettingChange = (deviceId, setting, value) => {
+    setDeviceSettings(prev => ({
+      ...prev,
+      [deviceId]: { ...prev[deviceId], [setting]: value }
+    }));
   };
+
 
   const next = () => setCurrent(current + 1);
   const prev = () => setCurrent(current - 1);
-
+  const handleFinish = async () => {
+    const username = form.getFieldValue("usuario");
+    const name = form.getFieldValue("nombre");
+    const apellido = form.getFieldValue("apellido");
+    const contra = form.getFieldValue("contrasena");
+    const licencia = form.getFieldValue("licencia");
+  
+    const usernameObject = {
+      username,
+      name,
+      apellido,
+      contrasena: contra,
+      licencia,
+      deviceSettings,
+    };
+  
+    try {
+      // 1. Registrar al usuario
+      const response = await axios.post("http://localhost:8000/api/users/create-user", usernameObject);
+      console.log("Usuario creado con éxito:", response);
+      message.success("Usuario creado");
+  
+      // 2. Capturar y enviar las imágenes después de crear el usuario
+      captureImages(); // Esto empezará a capturar las imágenes después de la creación del usuario
+    } catch (e) {
+      console.error(e);
+      message.error("Error al registrar el usuario");
+    }
+  };
+  
   const captureImages = () => {
     setCapturing(true);
     let capturedImages = [];
@@ -63,14 +106,13 @@ const RegistroDomo = () => {
         setImages([...capturedImages]);
       }
       count++;
-    }, 10); 
+    }, 10);
   };
-
+  
   const uploadImages = async (capturedImages) => {
     try {
       const username = form.getFieldValue("usuario");
   
-      // Construimos un solo objeto con todas las imágenes
       const payload = {
         username,
         images: capturedImages.map((image, index) => ({
@@ -80,7 +122,11 @@ const RegistroDomo = () => {
       };
   
       const response = await axios.post("http://localhost:8000/api/faces/save_faces", payload);
-      
+
+      if(response.status ===200){
+        console.log("siguen guardandose?")
+      }
+  
       console.log("Imágenes enviadas:", response);
       message.success("Imágenes enviadas con éxito");
     } catch (error) {
@@ -89,11 +135,6 @@ const RegistroDomo = () => {
     }
   };
   
-
-  const handleFinish = (values) => {
-    console.log("Datos del registro:", values, "Dispositivos Configurados:", deviceSettings);
-    message.success("Registro completado con éxito");
-  };
 
   return (
     <div style={{ width: "50%", margin: "auto", marginTop: "50px" }}>
@@ -116,18 +157,75 @@ const RegistroDomo = () => {
             <Form.Item name="usuario" label="Usuario" rules={[{ required: true, message: "Ingrese un usuario" }]}> 
               <Input /> 
             </Form.Item>
-            <Form.Item name="contraseña" label="Contraseña" rules={[{ required: true, message: "Ingrese una contraseña" }]}> 
+            <Form.Item name="contrasena" label="contrasena" rules={[{ required: true, message: "Ingrese una contraseña" }]}> 
               <Input.Password /> 
             </Form.Item>
+          </>
+        )}
+
+{current === 1 && (
+          <Form.Item name="licencia" label="License Key" rules={[{ required: true, message: "Ingrese la licencia" }]}> 
+            <Input.Password /> 
+          </Form.Item>
+        )}
+
+        {current === 2 && (
+          <>
+            <Form.Item label="Seleccionar Dispositivos" name="devices">
+              <Select
+                mode="multiple"
+                placeholder="Seleccione los dispositivos"
+                onChange={handleDeviceChange}
+                value={selectedDevices}
+              >
+                {devices.map(device => (
+                  <Option key={device.device_id} value={device.device_id}>
+                    {device.name}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+            
+            {selectedDevices.map(deviceId => {
+              const device = devices.find(d => d.device_id === deviceId);
+              return (
+                <div key={deviceId}>
+                  <h4>{device.name}</h4>
+                  {device.device_type === 0 && (
+                    <div>
+                      <label>Brillo:</label>
+                      <Slider 
+                        min={0} 
+                        max={100} 
+                        value={parseInt(deviceSettings[deviceId]?.brightness || 50)} 
+                        onChange={value => handleSettingChange(deviceId, "brightness", value)}
+                      />
+                    </div>
+                  )}
+                  {device.device_type === 1 && (
+                    <div>
+                      <label>Velocidad:</label>
+                      <Select 
+                        value={deviceSettings[deviceId]?.speed || "medium"} 
+                        onChange={value => handleSettingChange(deviceId, "speed", value)}
+                      >
+                        <Option value="low">Baja</Option>
+                        <Option value="medium">Media</Option>
+                        <Option value="high">Alta</Option>
+                      </Select>
+                    </div>
+                  )}
+                  
+                </div>
+              );
+            })}
           </>
         )}
         
         {current === 3 && (
           <>
             <Webcam audio={false} ref={webcamRef} screenshotFormat="image/jpeg" width={350} height={250} />
-            <Button type="primary" onClick={captureImages} disabled={capturing} style={{ marginTop: 10 }}>
-              {capturing ? "Capturando..." : "Iniciar Captura"}
-            </Button>
+   
           </>
         )}
         
@@ -144,7 +242,7 @@ const RegistroDomo = () => {
           )}
           {current === 3 && (
             <Button type="primary" htmlType="submit" disabled={capturing}>
-              Finalizar Registro
+              Captura tu rostro.
             </Button>
           )}
         </div>
