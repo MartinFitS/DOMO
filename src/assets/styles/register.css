@@ -23,15 +23,15 @@
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 100vh;
     background-color: #fdfdfd;
     box-sizing: border-box;
+    padding-top: 80px;
   }
   
   /* Estilo para el contenedor de los pasos */
   .ant-steps {
-    position: fixed;  
-    top: 80px;     
+    position: absolute; 
+    top: 60px;     
     left: 50%;
     transform: translateX(-50%); 
     width: 90%;     
@@ -40,7 +40,6 @@
     background-color: #ffffff;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    z-index: 999;     /* Asegura que los pasos queden sobre el resto del contenido */
   }
   
   .ant-form {
@@ -50,6 +49,7 @@
     padding: 30px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 80px;
   }
   
   /* Estilo para las opciones de dispositivos */
@@ -80,14 +80,11 @@
   }
   
   .camera-container .webcam {
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    width: 100%; /* Ajustar al 100% del contenedor */
-    height: 315;
-    max-width: 500px; /* Limitar el tamaño máximo */
-    aspect-ratio: auto 500 / 350; /* Relación de aspecto igual al contenedor de video */
-    height: auto; /* Mantener la relación de aspecto */
-  }
+    width: 100%;  /* Ajustar al contenedor */
+    max-width: 250px; /* Reducir el tamaño */
+    height: auto; /* Mantener la proporción */
+    aspect-ratio: 4 / 3; /* Mantener un tamaño más estándar */
+}
   
   .camera-container .webcam iframe {
     width: 100%;

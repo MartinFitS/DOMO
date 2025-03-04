@@ -222,7 +222,7 @@ const RegistroDomo = () => {
 
         {current === 3 && (
           <div className="camera-container">
-            <Webcam audio={false} ref={webcamRef} screenshotFormat="image/jpeg" />
+            <Webcam audio={false} ref={webcamRef} screenshotFormat="image/jpeg" width={580} height={250}/>
           </div>
         )}
 
