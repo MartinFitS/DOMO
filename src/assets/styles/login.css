@@ -1,0 +1,91 @@
+/* Estilos para el contenedor del login */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #fdfdfd;
+    padding: 250px;
+    box-sizing: border-box;
+  }
+  
+  /* Contenedor de formulario de login */
+  .login-form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    margin-top: 50px; /* Agrega un margen superior para separar el título del formulario */
+  }
+  
+  /* Título */
+  .title {
+    font-size: 36px;
+    font-weight: bold;
+    font-family: "serif";
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+    margin-top: 0;  /* Asegúrate de que no tenga márgenes innecesarios */
+  }
+  
+  /* Texto descriptivo */
+  .context {
+    font-size: 16px;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #555;
+  }
+  
+  /* Estilo para el contenedor de la cámara */
+  .camara-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 30px;
+    width: 100%;
+  }
+  
+  /* Estilo del video */
+  .video-feed {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    width: 100%;
+    height: auto;
+  }
+  
+  /* Botones */
+  .button-group {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  
+  /* Estilo para el formulario */
+  .ant-form-item {
+    margin-bottom: 20px;
+  }
+  
+  .ant-btn {
+    border-radius: 6px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Estilo para los campos de texto */
+  .ant-input,
+  .ant-input-password {
+    border-radius: 6px;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+  }
+  

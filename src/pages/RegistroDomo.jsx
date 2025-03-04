@@ -3,6 +3,7 @@ import { Steps, Form, Input, Button, message, Select, Slider } from "antd";
 import { CameraOutlined, CheckCircleOutlined, IdcardOutlined, SettingOutlined } from "@ant-design/icons";
 import Webcam from "react-webcam";
 import axios from "axios";
+import '../assets/styles/register.css';
 
 const { Step } = Steps;
 const { Option } = Select;
@@ -17,7 +18,6 @@ const RegistroDomo = () => {
   const [selectedDevices, setSelectedDevices] = useState([]);
   const [deviceSettings, setDeviceSettings] = useState({});
 
-
   useEffect(() => {
     axios.get("http://localhost:8000/api/devices/get_catalogue/devices")
       .then(response => {
@@ -28,15 +28,14 @@ const RegistroDomo = () => {
       });
   }, []);
 
-  const trainModel = async() =>{
-    try{
+  const trainModel = async() => {
+    try {
       const response = await axios.get("http://localhost:8000/api/faces/entrenar");
-
-      console.log(response)
-    }catch(e){
-      console.error(e)
+      console.log(response);
+    } catch (e) {
+      console.error(e);
     }
-  }
+  };
 
   const handleDeviceChange = (selected) => {
     setSelectedDevices(selected);
@@ -54,7 +53,6 @@ const RegistroDomo = () => {
       [deviceId]: { ...prev[deviceId], [setting]: value }
     }));
   };
-
 
   const next = () => setCurrent(current + 1);
   const prev = () => setCurrent(current - 1);
@@ -87,7 +85,7 @@ const RegistroDomo = () => {
       message.error("Error al registrar el usuario");
     }
   };
-  
+
   const captureImages = () => {
     setCapturing(true);
     let capturedImages = [];
@@ -108,7 +106,7 @@ const RegistroDomo = () => {
       count++;
     }, 10);
   };
-  
+
   const uploadImages = async (capturedImages) => {
     try {
       const username = form.getFieldValue("usuario");
@@ -123,8 +121,8 @@ const RegistroDomo = () => {
   
       const response = await axios.post("http://localhost:8000/api/faces/save_faces", payload);
 
-      if(response.status ===200){
-        console.log("siguen guardandose?")
+      if (response.status === 200) {
+        console.log("siguen guardandose?");
       }
   
       console.log("Imágenes enviadas:", response);
@@ -134,18 +132,18 @@ const RegistroDomo = () => {
       message.error("Error al enviar imágenes");
     }
   };
-  
 
   return (
-    <div style={{ width: "50%", margin: "auto", marginTop: "50px" }}>
+    <div className="register-container">
+    <div className="title">DOMO</div>
       <Steps current={current}>
         <Step title="Datos Personales" icon={<IdcardOutlined />} />
         <Step title="Licencia" icon={<CheckCircleOutlined />} />
         <Step title="Dispositivos" icon={<SettingOutlined />} />
         <Step title="Registro Facial" icon={<CameraOutlined />} />
       </Steps>
-      
-      <Form form={form} layout="vertical" onFinish={handleFinish} style={{ marginTop: 20 }}>
+
+      <Form form={form} layout="vertical" onFinish={handleFinish}>
         {current === 0 && (
           <>
             <Form.Item name="nombre" label="Nombre" rules={[{ required: true, message: "Ingrese su nombre" }]}> 
@@ -157,13 +155,14 @@ const RegistroDomo = () => {
             <Form.Item name="usuario" label="Usuario" rules={[{ required: true, message: "Ingrese un usuario" }]}> 
               <Input /> 
             </Form.Item>
-            <Form.Item name="contrasena" label="contrasena" rules={[{ required: true, message: "Ingrese una contraseña" }]}> 
+            <Form.Item name="contrasena" label="Contraseña" rules={[{ required: true, message: "Ingrese una contraseña" }]}> 
               <Input.Password /> 
             </Form.Item>
+           
           </>
         )}
 
-{current === 1 && (
+        {current === 1 && (
           <Form.Item name="licencia" label="License Key" rules={[{ required: true, message: "Ingrese la licencia" }]}> 
             <Input.Password /> 
           </Form.Item>
@@ -215,25 +214,26 @@ const RegistroDomo = () => {
                       </Select>
                     </div>
                   )}
-                  
                 </div>
               );
             })}
           </>
         )}
-        
+
         {current === 3 && (
-          <>
-            <Webcam audio={false} ref={webcamRef} screenshotFormat="image/jpeg" width={350} height={250} />
-   
-          </>
+          <div className="camera-container">
+            <Webcam audio={false} ref={webcamRef} screenshotFormat="image/jpeg" />
+          </div>
         )}
-        
+
         <div style={{ marginTop: 20 }}>
           {current > 0 && (
             <Button onClick={prev} style={{ marginRight: 8 }}>
               Anterior
             </Button>
+          )}
+           {current === 0 && (
+            <p>I already have an <a href="/login">account</a></p>
           )}
           {current < 3 && (
             <Button type="primary" onClick={next} disabled={current === 2 && selectedDevices.length > 3}>
