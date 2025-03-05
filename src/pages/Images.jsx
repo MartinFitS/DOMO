@@ -7,7 +7,7 @@ const ImageViewer = ({ username }) => {
   useEffect(() => {
     const fetchImage = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/api/faces/get-image/Mserna`);
+        const response = await axios.get(`http://localhost:8000/api/faces/get-image/mserna`);
         setBase64Image(response.data.image_base64);
       } catch (error) {
         console.error("Error al obtener la imagen", error);

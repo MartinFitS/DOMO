@@ -32,7 +32,9 @@ const RegistroDomo = () => {
     try{
       const response = await axios.get("http://localhost:8000/api/faces/entrenar");
 
-      console.log(response)
+      if(response.status === 200){
+        console.log("Modelo entrenado")
+      }
     }catch(e){
       console.error(e)
     }
@@ -80,7 +82,7 @@ const RegistroDomo = () => {
       console.log("Usuario creado con éxito:", response);
       message.success("Usuario creado");
   
-      // 2. Capturar y enviar las imágenes después de crear el usuario
+
       captureImages(); // Esto empezará a capturar las imágenes después de la creación del usuario
     } catch (e) {
       console.error(e);
@@ -106,7 +108,7 @@ const RegistroDomo = () => {
         setImages([...capturedImages]);
       }
       count++;
-    }, 10);
+    }, 100);
   };
   
   const uploadImages = async (capturedImages) => {
@@ -124,7 +126,7 @@ const RegistroDomo = () => {
       const response = await axios.post("http://localhost:8000/api/faces/save_faces", payload);
 
       if(response.status ===200){
-        console.log("siguen guardandose?")
+        trainModel()
       }
   
       console.log("Imágenes enviadas:", response);
