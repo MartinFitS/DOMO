@@ -18,12 +18,12 @@ const Login = () => {
                 // Remover "data:image/jpeg;base64," del string base64
                 const base64Image = imageSrc.replace(/^data:image\/\w+;base64,/, "");
 
-                console.log(base64Image)
+
     
                 try {
                     const response = await axios.post("http://localhost:8000/api/faces/login/face", { img: base64Image });
                     message.success("Inicio de sesión exitoso");
-                    console.log(response.data);
+                    console.log(response);
                 } catch (error) {
                     message.error("Error en el inicio de sesión");
                 }
