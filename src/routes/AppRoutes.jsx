@@ -5,6 +5,7 @@ import Index from "../pages/Index";
 import ImageViewer from "../pages/Images";
 import RegistroDomo from "../pages/RegistroDomo";
 import Login from "../pages/Login";
+import Home from "../pages/Home";
 
 const AppRoutes =  () => {
     return(
@@ -16,6 +17,8 @@ const AppRoutes =  () => {
             <Route path={"/img"} element={<ImageViewer/>}/>
 
             <Route path={"/login"} element={<Login/>}/>
+
+            <Route path={"/home"} element={<Home/>}/>
 
         </Routes>
     )

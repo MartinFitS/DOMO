@@ -1,0 +1,59 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+}
+
+.ant-layout {
+  border: none;
+}
+
+.logo {
+  padding: 30px;
+  color: white;
+  font-size: 20px;
+  text-align: center;
+  font-family: serif;
+}
+
+.header-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.welcome-container {
+  margin-bottom: 20px;
+}
+
+.card-container {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.card-item {
+  width: 150px;
+  text-align: center;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-icon {
+  font-size: 24px;
+}
+
+.card-title p {
+  margin: 0;
+}
+
+.card-switch {
+  margin-top: 10px;
+}
