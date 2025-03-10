@@ -2,6 +2,7 @@ import React, { useState, useRef, useCallback } from "react";
 import { Button, Input, Form, Card, Typography, message, Space, Checkbox } from "antd";
 import Webcam from "react-webcam";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 import house_img from "../assets/img/bungalow-house-of-of-provence- (1).png";
 import { CameraOutlined, UserOutlined, LockOutlined } from "@ant-design/icons";
@@ -13,6 +14,7 @@ const { Title } = Typography;
 const Login = () => {
     const [isCameraOpen, setIsCameraOpen] = useState(false);
     const webcamRef = useRef(null);
+    const navigate = useNavigate();
 
     const capture = useCallback(async () => {
         if (webcamRef.current) {
@@ -22,8 +24,12 @@ const Login = () => {
                 const base64Image = imageSrc.replace(/^data:image\/\w+;base64,/, "");
                 try {
                     const response = await axios.post("http://localhost:8000/api/faces/login/face", { img: base64Image });
-                    message.success("Inicio de sesión exitoso");
-                    console.log(response.data);
+                    const token = response.data.token;
+                    if (token) {
+                        localStorage.setItem("token", token);
+                        message.success("Inicio de sesión exitoso");
+                        navigate("/dashboard"); 
+                    }
                 } catch (error) {
                     message.error("Error en el inicio de sesión");
                 }
