@@ -108,7 +108,7 @@ const Login = () => {
                     
 
                     <Space style={{ width: "100%", marginTop: 40,justifyContent: "center" }}>
-                        <a style={{ color: "black" , textDecoration: "underline"}}>Register here</a>
+                        <a href="/registro" style={{ color: "black" , textDecoration: "underline"}}>Register here</a>
 
                     </Space>
                 </Card>
