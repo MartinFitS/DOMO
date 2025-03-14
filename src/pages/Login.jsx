@@ -9,8 +9,6 @@ import { CameraOutlined, UserOutlined, LockOutlined } from "@ant-design/icons";
 
 const { Title } = Typography;
 
-
-
 const Login = () => {
     const [isCameraOpen, setIsCameraOpen] = useState(false);
     const webcamRef = useRef(null);
