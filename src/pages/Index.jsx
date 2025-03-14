@@ -3,6 +3,7 @@ import { Layout, Typography, Menu } from "antd";
 import Plans from "../components/Plans";
 import laptopImg from "../assets/img/laptop-realista-telefono-inteligente.png";
 import AppFooter from "../components/AppFooter";
+import { useNavigate } from "react-router-dom";
 import SplitSection from "../components/SplitSection";
 
 const { Header, Content } = Layout;
@@ -10,6 +11,8 @@ const { Title, Paragraph } = Typography;
 
 const Index = () => {
   const [scrolled, setScrolled] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,9 +45,11 @@ const Index = () => {
       }}>
         <Title level={2} style={{ margin: 0, fontFamily: "serif", textAlign: scrolled ? "left" : "center", flex: 1, color: "black" }}>DOMO</Title>
         {scrolled && (
-          <Menu mode="horizontal" style={{ border: "none", background: "#f9f8f6" }}>
-            <Menu.Item key="dashboard">Dashboard</Menu.Item>
-            <Menu.Item key="about">About Us</Menu.Item>
+          <Menu mode="horizontal"       onClick={({ key }) => {
+            navigate(key);
+          }} style={{ border: "none", background: "#f9f8f6" }}>
+            <Menu.Item key="/registro">Register</Menu.Item>
+            <Menu.Item key="/iniciar-sesion">Iniciar Sesión</Menu.Item>
           </Menu>
         )}
       </Header>
