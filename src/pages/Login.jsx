@@ -25,9 +25,12 @@ const Login = () => {
                     const token = response.data.token;
                     if (token) {
                         localStorage.setItem("token", token);
+                        sessionStorage.setItem("userData", JSON.stringify(response.data));
+                        console.log(response.data);
                         message.success("Inicio de sesión exitoso");
                         navigate("/dashboard"); 
                     }
+
                 } catch (error) {
                     message.error("Error en el inicio de sesión");
                 }

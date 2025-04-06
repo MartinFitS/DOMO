@@ -1,87 +1,79 @@
-import React, { useState } from "react";
-import { Layout, Card, Menu, Switch, Avatar } from "antd";
-import { BulbOutlined, AudioOutlined, LaptopOutlined } from "@ant-design/icons";
+import React, { useState, useEffect } from "react";
+import { Layout } from "antd";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
-import DeviceControl from "../components/DeviceControl";
 import "../assets/styles/home.css";
 import "../assets/styles/devices.css";
+import UserCard from "../components/UserCard";
+import Devices from "../components/Devices";
+import Configuration from "../components/Configuration"; 
+import "../assets/css/Home.css"
 
 const { Content } = Layout;
 
 const Home = () => {
-  const [selectedDevice, setSelectedDevice] = useState("light");
-  const [devicesOn, setDevicesOn] = useState({
-    light: false,
-    fan: false,
-    speaker: false,
-  });
+  const [userData, setUserData] = useState(null);
+  const [selectedTab, setSelectedTab] = useState("home"); // Controla la vista actual
 
-  const handleMenuClick = (e) => setSelectedDevice(e.key);
-
-  const toggleDevice = (device) => {
-    setDevicesOn((prev) => ({
-      ...prev,
-      [device]: !prev[device],
-    }));
-  };
+  useEffect(() => {
+    const storedData = sessionStorage.getItem("userData");
+    if (storedData) {
+      setUserData(JSON.parse(storedData)); // Convertir JSON a objeto
+    }
+  }, []);
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <Sidebar />
+      <Sidebar onMenuClick={setSelectedTab} /> {/* Pasamos la función para cambiar la vista */}
 
       <Layout style={{ padding: "20px" }}>
         <Header />
 
         <Content>
-          <div className="welcome-container">
-            <h2>Welcome home, Ariel</h2>
-          </div>
-
-          {/* Sección de dispositivos */}
-          <div className="devices-on">
-            <h3 className="tittle-on-off">On or Off</h3>
-            <div className="light-row">
-              {["light", "fan", "speaker"].map((device, index) => (
-                <Card key={device} className="light-card">
-                  {device === "light" && <BulbOutlined className="card-icon" />}
-                  {device === "fan" && <LaptopOutlined className="card-icon" />}
-                  {device === "speaker" && <AudioOutlined className="card-icon" />}
-                  <Switch checked={devicesOn[device]} onChange={() => toggleDevice(device)} />
-                  <p>{device.charAt(0).toUpperCase() + device.slice(1)}</p>
-                </Card>
-              ))}
-            </div>
-          </div>
-
-          <div className="devices-row">
-            {/* Control de dispositivos */}
-            <Card title="Device Control" className="device-card">
-              <Menu onClick={handleMenuClick} selectedKeys={[selectedDevice]} mode="horizontal">
-                <Menu.Item key="light" icon={<BulbOutlined />}>Lights</Menu.Item>
-                <Menu.Item key="fan" icon={<LaptopOutlined />}>Fan</Menu.Item>
-                <Menu.Item key="speaker" icon={<AudioOutlined />}>Speaker</Menu.Item>
-              </Menu>
-              <div className="device-section">
-                <DeviceControl selectedDevice={selectedDevice} />
-              </div>
-            </Card>
-
-            {/* Personas en casa */}
-            <Card className="in-home-card">
-              <h3>In Home</h3>
-              {["Martín", "Mamá", "Papá"].map((name, index) => (
-                <div key={index} className="user-item">
-                  <Avatar src="https://xsgames.co/randomusers/avatar.php?g=male" />
-                  <p>{name}</p>
-                </div>
-              ))}
-            </Card>
-          </div>
+          {selectedTab === "home" && <HomeContent userData={userData} />}
+          {selectedTab === "devices" && <Devices userData={userData}/>}
+          {selectedTab === "configuration" && <Configuration />}
         </Content>
       </Layout>
     </Layout>
   );
 };
+
+const HomeContent = ({ userData }) => (
+  <div
+    style={{
+      background: "#fff",
+      borderRadius: "15px",
+      padding: "30px",
+      boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+      maxWidth: "1100px",
+      margin: "40px auto",
+    }}
+  >
+    <h2 style={{ fontSize: "30px", fontWeight: "bold", textAlign: "center" }}>
+      Welcome to <span style={{ color: "#1890ff" }}>DOMO Dashboard</span>
+    </h2>
+    <p style={{ fontSize: "24px", textAlign: "center", marginTop: "10px" }}>
+      Hello, {userData && userData.user ? userData.user.nombre : "Usuario"} 👋
+    </p>
+
+    <div style={{ height: "1px", background: "#ddd", margin: "20px 0" }}></div>
+
+    <h3 style={{ fontSize: "20px", fontWeight: "bold", textAlign: "center" }}>Personas de la casa</h3>
+
+    <div style={{ display: "flex", justifyContent: "center" }}>
+      {userData && userData.user ? (
+        <UserCard
+          photo={userData.user.photo || "https://i.pravatar.cc/150"}
+          firstName={userData.user.nombre}
+          lastName={userData.user.apellido}
+          accountType={userData.user.accountType}
+        />
+      ) : (
+        <p style={{ fontSize: "18px", textAlign: "center" }}>No user data available</p>
+      )}
+    </div>
+  </div>
+);
 
 export default Home;

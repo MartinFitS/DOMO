@@ -21,6 +21,11 @@ const RegistroDomo = () => {
   const [deviceSettings, setDeviceSettings] = useState({});
 
 
+  const generateUniqueId = () => {
+    return crypto.randomUUID().replace(/-/g, "").substring(0, 16);
+  };
+
+
   useEffect(() => {
     axios.get("http://localhost:8000/api/devices/get_catalogue/devices")
       .then(response => {
@@ -46,17 +51,35 @@ const RegistroDomo = () => {
   const handleDeviceChange = (selected) => {
     setSelectedDevices(selected);
     const newSettings = {};
+  
     selected.forEach(deviceId => {
       const device = devices.find(d => d.device_id === deviceId);
-      newSettings[deviceId] = device.default_preferences;  // Inicializamos con las preferencias por defecto
+      
+      // Construimos el objeto base sin "brightness"
+      let deviceConfig = {
+        ...device.default_preferences,
+        id: deviceSettings[deviceId]?.id || generateUniqueId(),
+      };
+  
+      // Si el dispositivo es LED (tipo 0), agregamos "brightness"
+      if (device.device_type === 0) {
+        deviceConfig.brightness = parseInt(device.default_preferences?.brightness, 10) || 50;
+      }
+  
+      newSettings[deviceId] = deviceConfig;
     });
+  
     setDeviceSettings(newSettings);
   };
-
+  
+  
   const handleSettingChange = (deviceId, setting, value) => {
     setDeviceSettings(prev => ({
       ...prev,
-      [deviceId]: { ...prev[deviceId], [setting]: value }
+      [deviceId]: { 
+        ...prev[deviceId], 
+        [setting]: value 
+      }
     }));
   };
 
@@ -69,6 +92,7 @@ const RegistroDomo = () => {
     const apellido = form.getFieldValue("apellido");
     const contra = form.getFieldValue("contrasena");
     const licencia = form.getFieldValue("licencia");
+
   
     const usernameObject = {
       username,
@@ -231,6 +255,18 @@ const RegistroDomo = () => {
                         <Option value="medium">Media</Option>
                         <Option value="high">Alta</Option>
                       </Select>
+                    </div>
+                  )}
+
+                  {device.device_type === 2 && (
+                    <div>
+                      <label>Abiertas:</label>
+                      <Slider 
+                        min={0} 
+                        max={100} 
+                        value={parseInt(deviceSettings[deviceId]?.open || 50)} 
+                        onChange={value => handleSettingChange(deviceId, "open", value)}
+                      />
                     </div>
                   )}
                   
